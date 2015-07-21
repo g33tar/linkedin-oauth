@@ -26,7 +26,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cookieSession({ name: 'session', keys: [process.env.key1, process.env.key2]}))
+app.use(cookieSession({ name: 'session', keys: [process.env.SECRET1, process.env.SECRET2]}))
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -61,6 +61,12 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(user, done) {
   done(null, user);
 });
+
+app.use(function (req, res, next) {
+  res.locals.user = req.user
+  next()
+})
+
 
 app.use('/', routes);
 app.use('/users', users);
